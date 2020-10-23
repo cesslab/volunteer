@@ -1,0 +1,45 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Volunteer Page: Player {{ player.id_in_group}}
+{% endblock %}
+
+{% block content %}
+<div>
+  <h4 id="message"></h4>
+</div>
+<div>
+  <button id="vButton" class="btn btn-success" type="button" onClick="sendMessage()">Volunteer</button>
+  <button id="nextButton" class="btn btn-primary" type="submit">New Next</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  let volunteerOccured = {{player.group.volunteer_found|json}}
+  let playerGroupId = {{player.id_in_group|json}}
+  let messageHeader = document.getElementById('message')
+  let nextButton = document.getElementById('nextButton')
+  nextButton.style.display = "none"
+
+  let vButton = document.getElementById('vButton')
+  vButton.onclick = () => {
+    liveSend({})
+  }
+
+  function liveRecv(data) {
+    console.log(data)
+    if (playerGroupId != data.id_in_group) {
+      messageHeader.innerHTML = "<p><b>Player " + data.id_in_group +
+        "</b> volunteered.</p> <p>Click next to proceed.</p>"
+    } else {
+      messageHeader.innerHTML = "<p><p>Click next to proceed.</p>"
+    }
+
+    vButton.style.display = "none"
+    nextButton.style.display = "block"
+  }
+
+</script>
+{% endblock %}
